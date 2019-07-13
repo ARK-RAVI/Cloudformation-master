@@ -1,0 +1,947 @@
+{
+  "AWSTemplateFortesttVersion": "2010-09-09",
+  "Description": "Creates an ELB, EC2 instance, security groups, and DNS entries for a test demo environment.",
+  "Parameters": {
+    "SSLCertARN": {
+      "Type": "String",
+      "Default": "Certificate",
+      "Description": "The ARN of the SSL cert to be used on the ELB."
+    },
+    "Route53HostedZoneID": {
+      "Type": "String",
+      "Default": "53",
+      "Description": "The Hosted Zone ID in Route53 for DNS entries."
+    },
+    "Route53DotestinName": {
+      "Type": "String",
+      "Default": "testdemo.com",
+      "Description": "The Dotestin Name testnaged by the Hosted Zone."
+    },
+    "HostName": {
+      "Type": "String",
+      "Default": "testck",
+      "Description": "The base hostname for this demo environment."
+    },
+    "VpcStackName": {
+      "Type": "String",
+      "Default": "test-test-NVirgina-VPC",
+      "Description": "CloudFortesttion stack name of the VPC - infrastructure will be launched inside this VPC"
+    },
+    "AdminSecurityGroupStackName": {
+      "Type": "String",
+      "Description": "Cloudfortesttion stack name of the Admin Security Group to allow inbound admin ports for the ELB",
+      "Default": "test-test-NVirginia-Admin-SG"
+    },
+    "KeyPair": {
+      "Description": "EC2 Keypair to use for SSH",
+      "Type": "AWS::EC2::KeyPair::KeyName",
+      "Default": "test-NVirginia-Admin"
+    },
+    "AMI": {
+      "Description": "test AMI to launch",
+      "Type": "AWS::EC2::Itestge::Id",
+      "Default": "ami-b1c9dda6"
+    },
+    "InstanceType": {
+      "Description": "EC2 instance type",
+      "Type": "String",
+      "Default": "m4.2xlarge",
+      "AllowedValues": [
+        "m4.2xlarge",
+        "r3.2xlarge",
+        "c4.2xlarge"
+      ],
+      "ConstraintDescription": "must be a valid EC2 instance type."
+    },
+    "RemoteCidr": {
+      "Description": "CIDR address to initialize the RemoteAdminSecurityGroup",
+      "Type": "String",
+      "Default": "199.47.37.3/32"
+    },
+
+"NameValue": {"Type": "String","Default": "test2016-test Production Pilot - VoCollect"},
+"HostnameValue": {"Type": "String","Default": "testck.testdemo.com"},
+"BusinessUnitValue": {"Type": "String","Default": "test", "AllowedPattern" : "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$"},
+"ProjectTeamValue": {"Type": "String","Default": "test"},
+"CostCenterValue": {"Type": "String","Default": "test", "AllowedPattern" : "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$"},
+"AccountCodeValue": {"Type": "String","Default": "testNH", "AllowedPattern" : "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$"},
+"OwnerValue": {"Type": "String","Default": "koti", "AllowedPattern" : "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$"},
+"ProductNameValue": {"Type": "String","Default": "test2016"},
+"VersionValue": {"Type": "String","Default": "GA"},
+"TierValue": {"Type": "String","Default": "Self-Contained"},
+"EnvironmentValue": {"Type": "String","Default": "deployment"},
+"ClusterValue": {"Type": "String","Default": "Standalone"},
+"SecurityValue": {"Type": "String","Default": ""},
+"ConfidentialityValue": {"Type": "String","Default": ""},
+"ComplianceValue": {"Type": "String","Default": ""},
+"SalesRegionValue": {"Type": "String","Default": "US", "AllowedPattern" : "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$"},
+"DepartmentValue": {"Type": "String","Default": "test", "AllowedPattern" : "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$"},
+"LocalTimezoneValue": {"Type": "String","Default": "America/New_York"},
+"DefaultLanguageValue": {"Type": "String","Default": "English"},
+"DemoNameValue": {"Type": "String","Default": ""},
+"DemoPrepStartDateTimeValue": {"Type": "String","Default": ""},
+"DemoPrepEndDateTimeValue": {"Type": "String","Default": ""},
+"DemoStartDateTimeValue": {"Type": "String","Default": ""},
+"DemoEndDateTimeValue": {"Type": "String","Default": ""},
+"DemoLocationValue": {"Type": "String","Default": ""},
+"DemoTypeValue": {"Type": "String","Default": ""},
+"DemoProductListValue": {"Type": "String","Default": ""},
+"testAdministratorValue": {"Type": "String","Default": "rrizzo", "AllowedPattern" : "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$"},
+"EnvironmentPatchLevelValue": {"Type": "String","Default": "032.2016WM.WM.033"},
+"InitialGoldDBRevisionValue": {"Type": "String","Default": ""},
+"DeploymentStateValue": {"Type": "String","Default": "In Production"},
+"EnvironmentPurposeValue": {"Type": "String","Default": "Production"},
+"EnvironmentUsagePolicyValue": {"Type": "String","Default": "test testnual Start / Stop"},
+"EnvironmentUsageScheduleValue": {"Type": "String","Default": ""},
+"ArchiveDateValue": {"Type": "String","Default": "2/27/2017"},
+"testintenanceRequiredValue": {"Type": "String","Default": "No"},
+"testintenanceDateValue": {"Type": "String","Default": ""}
+
+  },
+  "testppings" : {
+    "RegionAMI" : {
+		"us-east-1" : { "AMI" : "" },
+		"us-east-2" : { "AMI" : "" },
+		"us-west-1" : { "AMI" : "" },
+		"us-west-2" : { "AMI" : "" },
+		"eu-west-1" : { "AMI" : "" },
+		"eu-west-2"	 : { "AMI" : "" },
+		"eu-central-1" : { "AMI" : ""  },
+		"ap-northeast-1" : { "AMI" : "" },
+		"ap-northeast-2" : { "AMI" : "" },
+		"ap-southeast-1" : { "AMI" : "" },
+		"ap-southeast-2" : { "AMI" : "" },
+		"ap-south-1" : { "AMI" : "" },
+		"sa-east-1" : { "AMI" : "" },
+		"ca-central-1" : { "AMI" : "" }
+		
+		} 
+    },
+  "Resources": {
+    "ELBSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "Access control for Demo ELB",
+        "VpcId": {"Fn::ImportValue": {"Fn::Sub": "${VpcStackName}-VPC"}},
+        "SecurityGroupIngress": [
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "80",
+            "ToPort": "80",
+            "CidrIp": "0.0.0.0/0"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "443",
+            "ToPort": "443",
+            "CidrIp": "0.0.0.0/0"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "6709",
+            "ToPort": "6709",
+            "CidrIp": "0.0.0.0/0"
+          }
+        ]
+      },
+      "Metadata": {
+        "AWS::CloudFortesttion::Designer": {
+          "id": "2dc33dde-6fb7-42c1-8b0a-9505d76e62f9"
+        }
+      }
+    },
+    "RemoteAdminSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "Remote Admin Access control for Demo ELB",
+        "VpcId": {"Fn::ImportValue": {"Fn::Sub": "${VpcStackName}-VPC"}},
+        "SecurityGroupIngress": [
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "22",
+            "ToPort": "22",
+            "CidrIp": { "Ref": "RemoteCidr" }
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "1521",
+            "ToPort": "1521",
+            "CidrIp": { "Ref": "RemoteCidr" }
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "20000",
+            "ToPort": "25000",
+            "CidrIp": { "Ref": "RemoteCidr" }
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "80",
+            "ToPort": "80",
+            "CidrIp": { "Ref": "RemoteCidr" }
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "443",
+            "ToPort": "443",
+            "CidrIp": { "Ref": "RemoteCidr" }
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "6701",
+            "ToPort": "6701",
+            "CidrIp": { "Ref": "RemoteCidr" }
+          }
+        ]
+      },
+      "Metadata": {
+        "AWS::CloudFortesttion::Designer": {
+          "id": "2dc33dde-6fb7-42c1-8b0a-9505d76e62f9"
+        }
+      }
+    },
+    "ELB": {
+      "Type": "AWS::ElasticLoadBalancing::LoadBalancer",
+      "Properties": {
+        "Instances": [{"Ref": "EC2"}],
+        "HealthCheck": {
+          "HealthyThreshold": "2",
+          "Interval": "30",
+          "Target": "TCP:22",
+          "Timeout": "5",
+          "UnhealthyThreshold": "5"
+        },
+        "Listeners": [
+          {
+            "InstancePort": "80",
+            "LoadBalancerPort": "80",
+            "Protocol": "HTTP",
+            "InstanceProtocol": "HTTP",
+            "PolicyNames": []
+          },
+          {
+            "InstancePort": "443",
+            "LoadBalancerPort": "443",
+            "Protocol": "HTTPS",
+            "InstanceProtocol": "HTTPS",
+            "SSLCertificateId": {
+              "Ref": "SSLCertARN"
+            },
+            "PolicyNames": []
+          },
+          {
+            "InstancePort": "6709",
+            "LoadBalancerPort": "6709",
+            "Protocol": "TCP",
+            "InstanceProtocol": "TCP",
+            "PolicyNames": []
+          },
+          {
+            "InstancePort": "22",
+            "LoadBalancerPort": "22",
+            "Protocol": "TCP",
+            "InstanceProtocol": "TCP",
+            "PolicyNames": []
+          }
+        ],
+        "Subnets": [
+          {"Fn::ImportValue": {"Fn::Sub": "${VpcStackName}-PublicSubnet1"}}
+        ],
+        "SecurityGroups": [
+          {"Ref": "ELBSecurityGroup"},
+          {"Ref": "RemoteAdminSecurityGroup"},
+          {"Fn::ImportValue": {"Fn::Sub": "${AdminSecurityGroupStackName}-AdminSecurityGroup"}}
+        ],
+        "Tags": [
+            { "Key": "Name", "Value": { "Ref": "NameValue" } },
+            { "Key": "Account Code", "Value": { "Ref": "AccountCodeValue" } },
+			{ "Key": "Business Unit", "Value": { "Ref": "BusinessUnitValue" } },
+			{ "Key": "Cost Center", "Value": { "Ref": "CostCenterValue" } },
+			{ "Key": "Department", "Value": { "Ref": "DepartmentValue" } },
+			{ "Key": "Owner", "Value": { "Ref": "OwnerValue" } },
+			{ "Key": "test Administrator", "Value": { "Ref": "testAdministratorValue" } },
+			{ "Key": "Sales Region", "Value": { "Ref": "SalesRegionValue" } }
+        ]
+      },
+      "Metadata": {
+        "AWS::CloudFortesttion::Designer": {
+          "id": "fb92a172-f189-40a6-ab1d-372c983df59a"
+        }
+      }
+    },
+    "EC2SecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "Access control for Demo ELB",
+        "VpcId": {"Fn::ImportValue": {"Fn::Sub": "${VpcStackName}-VPC"}},
+        "SecurityGroupIngress": [
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "0",
+            "ToPort": "65535",
+            "SourceSecurityGroupId": {
+              "Ref": "ELBSecurityGroup"
+            }
+          }
+        ]
+      },
+      "Metadata": {
+        "AWS::CloudFortesttion::Designer": {
+          "id": "918cfc1a-7461-45e4-9e73-05fb517906c3"
+        }
+      }
+    },
+    "EC2": {
+      "Type": "AWS::EC2::Instance",
+      "Properties": {
+        "ItestgeId": {"Ref": "AMI"},
+        "KeyName": {"Ref": "KeyPair"},
+        "InstanceType": {"Ref": "InstanceType"},
+        "SecurityGroupIds": [
+          {"Ref": "EC2SecurityGroup"}
+        ],
+        "SubnetId": {
+          "Fn::ImportValue": {"Fn::Sub": "${VpcStackName}-PrivateSubnet1"}
+        },
+        "Tags": [
+			{ "Key": "Name", "Value": { "Ref": "NameValue" } },
+			{ "Key": "Hostname", "Value": { "Ref": "HostnameValue" } },
+			{ "Key": "Business Unit", "Value": { "Ref": "BusinessUnitValue" } },
+			{ "Key": "Project Team", "Value": { "Ref": "ProjectTeamValue" } },
+			{ "Key": "Cost Center", "Value": { "Ref": "CostCenterValue" } },
+			{ "Key": "Account Code", "Value": { "Ref": "AccountCodeValue" } },
+			{ "Key": "Owner", "Value": { "Ref": "OwnerValue" } },
+			{ "Key": "Product Name", "Value": { "Ref": "ProductNameValue" } },
+			{ "Key": "Version", "Value": { "Ref": "VersionValue" } },
+			{ "Key": "Tier", "Value": { "Ref": "TierValue" } },
+			{ "Key": "Environment", "Value": { "Ref": "EnvironmentValue" } },
+			{ "Key": "Cluster", "Value": { "Ref": "ClusterValue" } },
+			{ "Key": "Security", "Value": { "Ref": "SecurityValue" } },
+			{ "Key": "Confidentiality", "Value": { "Ref": "ConfidentialityValue" } },
+			{ "Key": "Compliance", "Value": { "Ref": "ComplianceValue" } },
+			{ "Key": "Sales Region", "Value": { "Ref": "SalesRegionValue" } },
+			{ "Key": "Department", "Value": { "Ref": "DepartmentValue" } },
+			{ "Key": "Local Timezone", "Value": { "Ref": "LocalTimezoneValue" } },
+			{ "Key": "Default Language", "Value": { "Ref": "DefaultLanguageValue" } },
+			{ "Key": "Demo Name", "Value": { "Ref": "DemoNameValue" } },
+			{ "Key": "Demo Prep Start Date / Time", "Value": { "Ref": "DemoPrepStartDateTimeValue" } },
+			{ "Key": "Demo Prep End Date / Time", "Value": { "Ref": "DemoPrepEndDateTimeValue" } },
+			{ "Key": "Demo Start Date / Time", "Value": { "Ref": "DemoStartDateTimeValue" } },
+			{ "Key": "Demo End Date / Time", "Value": { "Ref": "DemoEndDateTimeValue" } },
+			{ "Key": "Demo Location", "Value": { "Ref": "DemoLocationValue" } },
+			{ "Key": "Demo Type", "Value": { "Ref": "DemoTypeValue" } },
+			{ "Key": "Demo Product List", "Value": { "Ref": "DemoProductListValue" } },
+			{ "Key": "test Administrator", "Value": { "Ref": "testAdministratorValue" } },
+			{ "Key": "Environment Patch Level", "Value": { "Ref": "EnvironmentPatchLevelValue" } },
+			{ "Key": "Initial Gold DB Revision", "Value": { "Ref": "InitialGoldDBRevisionValue" } },
+			{ "Key": "Deployment State", "Value": { "Ref": "DeploymentStateValue" } },
+			{ "Key": "Environment Purpose", "Value": { "Ref": "EnvironmentPurposeValue" } },
+			{ "Key": "Environment Usage Policy", "Value": { "Ref": "EnvironmentUsagePolicyValue" } },
+			{ "Key": "Environment Usage Schedule", "Value": { "Ref": "EnvironmentUsageScheduleValue" } },
+			{ "Key": "Archive Date", "Value": { "Ref": "ArchiveDateValue" } },
+			{ "Key": "testintenance Required", "Value": { "Ref": "testintenanceRequiredValue" } },
+			{ "Key": "testintenance Date", "Value": { "Ref": "testintenanceDateValue" } }
+        ],
+        "UserData": {
+          "Fn::Base64": {"Fn::Join": [ "",["hostname:",{
+                  "Fn::Join": ["",[{"Ref": "HostName"},".",{"Ref": "Route53DotestinName"}]]
+                },
+                "\n",
+                "mip:",
+                {
+                  "Fn::Join": ["",[{"Ref": "HostName"},"mip.",{"Ref": "Route53DotestinName"}]]
+                },
+                "\n",
+                "mda:",
+                {
+                  "Fn::Join": ["",[{"Ref": "HostName"},"mda.",{"Ref": "Route53DotestinName"}]]
+                },
+                "\n",
+                "dash:",
+                {
+                  "Fn::Join": ["",[{"Ref": "HostName"},"dash.",{"Ref": "Route53DotestinName"}]]
+                },
+                "\n",
+                "ca:",
+                {
+                  "Fn::Join": ["",[{"Ref": "HostName"},"ca.",{"Ref": "Route53DotestinName"}]]
+                },
+                "\n",
+                "wms:",
+                {
+                  "Fn::Join": ["",[{"Ref": "HostName"},"wms.",{"Ref": "Route53DotestinName"}]]
+                },
+                "\n",
+                "solr:",
+                {
+                  "Fn::Join": ["",[{"Ref": "HostName"},"solr.",{"Ref": "Route53DotestinName"}]]
+                },
+                "\n",
+                "mmc:",
+                {
+                  "Fn::Join": ["",[{"Ref": "HostName"},"mmc.",{"Ref": "Route53DotestinName"}]]
+                },
+                "\n",
+                "tpe:",
+                {
+                  "Fn::Join": ["",[{"Ref": "HostName"},"tpe.",{"Ref": "Route53DotestinName"}]]
+                },
+                "\n",
+                "tp:",
+                {
+                  "Fn::Join": ["",[{"Ref": "HostName"},"tp.",{"Ref": "Route53DotestinName"}]]
+                },
+                "\n",
+                "df:",
+                {
+                  "Fn::Join": ["",[{"Ref": "HostName"},"df.",{"Ref": "Route53DotestinName"}]]
+                },
+                "\n",
+                "io:",
+                {
+                  "Fn::Join": ["",[{"Ref": "HostName"},"io.",{"Ref": "Route53DotestinName"}]]
+                },
+                "\n",
+                "ap:",
+                {
+                  "Fn::Join": ["",[{"Ref": "HostName"},"ap.",{"Ref": "Route53DotestinName"}]]
+                },
+                "\n",
+                "slot:",
+                {
+                  "Fn::Join": ["",[{"Ref": "HostName"},"slot.",{"Ref": "Route53DotestinName"}]]
+                },
+                "\n",
+                "tcs:",
+                {
+                  "Fn::Join": ["",[{"Ref": "HostName"},"tcs.",{"Ref": "Route53DotestinName"}]]
+                },
+                "\n",
+                "clnt:",
+                {
+                  "Fn::Join": ["",[{"Ref": "HostName"},"clnt.",{"Ref": "Route53DotestinName"}]]
+                },
+                "\n",
+                "rtl:",
+                {
+                  "Fn::Join": ["",[{"Ref": "HostName"},"rtl.",{"Ref": "Route53DotestinName"}]] 
+                },
+                "\n"
+              ]
+            ]
+          }
+        }
+      },
+      "Metadata": {
+        "AWS::CloudFortesttion::Designer": {
+          "id": "346d47dc-9547-40ae-9faa-7378d3f4df28"
+        }
+      }
+    },
+    "PritestryDNS": {
+      "Type": "AWS::Route53::RecordSet",
+      "Properties": {
+        "HostedZoneId": {"Ref": "Route53HostedZoneID"},
+        "Name": {"Fn::Join": ["",[{"Ref": "HostName"},".",{"Ref": "Route53DotestinName"}]]},
+        "AliasTarget": {
+          "HostedZoneId": {"Fn::GetAtt": ["ELB","CanonicalHostedZoneNameID"]},
+          "DNSName": {"Fn::GetAtt": ["ELB","DNSName"]}},
+        "Type": "A"
+      },
+      "Metadata": {
+        "AWS::CloudFortesttion::Designer": {
+          "id": "ae3a027a-0fdd-4c2a-a3e4-b4a0e89f56cb"
+        }
+      }
+    },
+    "testDNS": {
+      "Type": "AWS::Route53::RecordSet",
+      "Properties": {
+        "HostedZoneId": {"Ref": "Route53HostedZoneID"},
+        "Name": {"Fn::Join": ["",[{"Ref": "HostName"},"mip.",{"Ref": "Route53DotestinName"}]]},
+        "AliasTarget": {
+          "HostedZoneId": {"Fn::GetAtt": ["ELB","CanonicalHostedZoneNameID"]},
+          "DNSName": {"Fn::GetAtt": ["ELB","DNSName"]}},
+          "Type": "A"
+      },
+      "Metadata": {
+        "AWS::CloudFortesttion::Designer": {
+          "id": "6b7e263c-b9ec-4098-a50f-38ea24d9e9a7"
+        }
+      }
+    },
+    "secondDNS": {
+       "Type": "AWS::Route53::RecordSet",
+      "Properties": {
+        "HostedZoneId": {"Ref": "Route53HostedZoneID"},
+        "Name": {"Fn::Join": ["",[{"Ref": "HostName"},"mda.",{"Ref": "Route53DotestinName"}]]},
+        "AliasTarget": {
+          "HostedZoneId": {"Fn::GetAtt": ["ELB","CanonicalHostedZoneNameID"]},
+          "DNSName": {
+            "Fn::GetAtt": ["ELB","DNSName"]}},
+        "Type": "A"
+      },
+      "Metadata": {
+        "AWS::CloudFortesttion::Designer": {
+          "id": "5f93a5cd-7f41-4f83-8f28-1270666f6f30"
+        }
+      }
+    },
+    "thirdDNS": {
+      "Type": "AWS::Route53::RecordSet",
+      "Properties": {
+        "HostedZoneId": {"Ref": "Route53HostedZoneID"},
+        "Name": {
+          "Fn::Join": ["",[{"Ref": "HostName"},"dash.",{"Ref": "Route53DotestinName"}]]
+        },
+        "AliasTarget": {
+          "HostedZoneId": {"Fn::GetAtt": ["ELB","CanonicalHostedZoneNameID"]},
+          "DNSName": {"Fn::GetAtt": ["ELB","DNSName"]}
+        },
+        "Type": "A"
+      },
+      "Metadata": {
+        "AWS::CloudFortesttion::Designer": {
+          "id": "c26161db-4264-444e-a4b8-b80a44e25081"
+        }
+      }
+    },
+    "fourthDNS": {
+      "Type": "AWS::Route53::RecordSet",
+      "Properties": {
+        "HostedZoneId": {"Ref": "Route53HostedZoneID"},
+        "Name": {"Fn::Join": ["",[{"Ref": "HostName"},"ca.",{"Ref": "Route53DotestinName"}]]},
+        "AliasTarget": {
+          "HostedZoneId": {"Fn::GetAtt": ["ELB","CanonicalHostedZoneNameID"]},
+          "DNSName": {"Fn::GetAtt": ["ELB","DNSName"]}
+        },
+        "Type": "A"
+      },
+      "Metadata": {
+        "AWS::CloudFortesttion::Designer": {
+          "id": "81bf45e2-fd4b-4353-9222-024ef219aae6"
+        }
+      }
+    },
+    "fifthDNS": {
+      "Type": "AWS::Route53::RecordSet",
+      "Properties": {
+        "HostedZoneId": {"Ref": "Route53HostedZoneID"},
+        "Name": {"Fn::Join": ["",[{"Ref": "HostName"},"wms.",{"Ref": "Route53DotestinName"}]]},
+        "AliasTarget": {
+          "HostedZoneId": {"Fn::GetAtt": ["ELB","CanonicalHostedZoneNameID"]},
+          "DNSName": {"Fn::GetAtt": ["ELB","DNSName"]}
+        },
+        "Type": "A"
+      },
+      "Metadata": {
+        "AWS::CloudFortesttion::Designer": {
+          "id": "f56f7719-3657-4bba-b8f3-da701f43e344"
+        }
+      }
+    },
+    "sixDNS": {
+      "Type": "AWS::Route53::RecordSet",
+      "Properties": {
+        "HostedZoneId": {"Ref": "Route53HostedZoneID"},
+        "Name": {"Fn::Join": ["",[{"Ref": "HostName"},"solr.",{"Ref": "Route53DotestinName"}]]},
+        "AliasTarget": {
+          "HostedZoneId": {"Fn::GetAtt": ["ELB","CanonicalHostedZoneNameID"]},
+          "DNSName": {"Fn::GetAtt": ["ELB","DNSName"]}
+        },
+        "Type": "A"
+      },
+      "Metadata": {
+        "AWS::CloudFortesttion::Designer": {
+          "id": "513185f4-a400-4ec8-8e51-9fa0493e22c9"
+        }
+      }
+    },
+    "sevenDNS": {
+      "Type": "AWS::Route53::RecordSet",
+      "Properties": {
+        "HostedZoneId": {"Ref": "Route53HostedZoneID"},
+        "Name": {"Fn::Join": ["",[{"Ref": "HostName"},"mmc.",{"Ref": "Route53DotestinName"}]]},
+        "AliasTarget": {
+          "HostedZoneId": {"Fn::GetAtt": ["ELB","CanonicalHostedZoneNameID"]},
+          "DNSName": {"Fn::GetAtt": ["ELB","DNSName"]}
+        },
+        "Type": "A"
+      },
+      "Metadata": {
+        "AWS::CloudFortesttion::Designer": {
+          "id": "35d2218d-8248-4f6d-9d08-d37ebeefa066"
+        }
+      }
+    }
+  },
+  "Outputs": {
+    "ELB": {
+      "Value": {"Ref": "ELB"},
+      "Export": {"Name": {"Fn::Sub": "${AWS::StackName}-ELB"}} },
+    "ELBSecurityGroup": {
+      "Value": {"Ref": "ELBSecurityGroup"},
+      "Export": {"Name": {"Fn::Sub": "${AWS::StackName}-ELBSecurityGroup"}}},
+    "RemoteAdminSecurityGroup": {
+      "Value": {"Ref": "RemoteAdminSecurityGroup"},
+      "Export": { "Name": {"Fn::Sub": "${AWS::StackName}-RemoteAdminSecurityGroup"}}},
+    "EC2": {
+      "Value": {"Ref": "EC2"},
+      "Export": {"Name": {"Fn::Sub": "${AWS::StackName}-EC2"}}},
+    "EC2SecurityGroup": {
+      "Value": {"Ref": "EC2SecurityGroup"},
+      "Export": {"Name": {"Fn::Sub": "${AWS::StackName}-EC2SecurityGroup"}}},
+    "PritestryDNS": {
+      "Value": {"Ref": "PritestryDNS"},
+      "Export": {"Name": {"Fn::Sub": "${AWS::StackName}-PritestryDNS"}}}
+  },
+  "Metadata": {
+    "AWS::CloudFortesttion::Designer": {
+      "dcd7f4c7-52a5-44e3-8072-0e715dc33420": {
+        "size": {
+          "width": 60,
+          "height": 60
+        },
+        "position": {
+          "x": 60,
+          "y": 90
+        },
+        "z": 1,
+        "embeds": []
+      },
+      "cd6bcf8c-eda0-46c0-a592-1ffd24a122d2": {
+        "size": {
+          "width": 60,
+          "height": 60
+        },
+        "position": {
+          "x": 180,
+          "y": 90
+        },
+        "z": 1,
+        "embeds": [],
+        "isassociatedwith": [
+          "dcd7f4c7-52a5-44e3-8072-0e715dc33420"
+        ]
+      },
+      "2dc33dde-6fb7-42c1-8b0a-9505d76e62f9": {
+        "size": {
+          "width": 60,
+          "height": 60
+        },
+        "position": {
+          "x": 60,
+          "y": 210
+        },
+        "z": 1,
+        "embeds": []
+      },
+      "918cfc1a-7461-45e4-9e73-05fb517906c3": {
+        "size": {
+          "width": 60,
+          "height": 60
+        },
+        "position": {
+          "x": 180,
+          "y": 210
+        },
+        "z": 1,
+        "embeds": [],
+        "isrelatedto": [
+          "2dc33dde-6fb7-42c1-8b0a-9505d76e62f9"
+        ]
+      },
+      "346d47dc-9547-40ae-9faa-7378d3f4df28": {
+        "size": {
+          "width": 60,
+          "height": 60
+        },
+        "position": {
+          "x": 300,
+          "y": 90
+        },
+        "z": 1,
+        "embeds": [],
+        "ismemberof": [
+          "918cfc1a-7461-45e4-9e73-05fb517906c3"
+        ],
+        "isrelatedto": [
+          "cd6bcf8c-eda0-46c0-a592-1ffd24a122d2"
+        ]
+      },
+      "fb92a172-f189-40a6-ab1d-372c983df59a": {
+        "size": {
+          "width": 60,
+          "height": 60
+        },
+        "position": {
+          "x": 300,
+          "y": 210
+        },
+        "z": 1,
+        "embeds": [],
+        "isconnectedto": [
+          "346d47dc-9547-40ae-9faa-7378d3f4df28"
+        ],
+        "ismemberof": [
+          "2dc33dde-6fb7-42c1-8b0a-9505d76e62f9"
+        ]
+      },
+      "44dc8beb-6939-47c5-a7b6-b0a650c2938f": {
+        "size": {
+          "width": 60,
+          "height": 60
+        },
+        "position": {
+          "x": 60,
+          "y": 330
+        },
+        "z": 1,
+        "embeds": [],
+        "isrelatedto": [
+          "fb92a172-f189-40a6-ab1d-372c983df59a"
+        ]
+      },
+      "4779c216-38cf-48e1-bcc5-b778449b08b0": {
+        "size": {
+          "width": 60,
+          "height": 60
+        },
+        "position": {
+          "x": 180,
+          "y": 330
+        },
+        "z": 1,
+        "embeds": [],
+        "isrelatedto": [
+          "fb92a172-f189-40a6-ab1d-372c983df59a"
+        ]
+      },
+      "b13bc50c-10f0-442c-9c85-5675577a5755": {
+        "size": {
+          "width": 60,
+          "height": 60
+        },
+        "position": {
+          "x": 300,
+          "y": 330
+        },
+        "z": 1,
+        "embeds": [],
+        "isrelatedto": [
+          "fb92a172-f189-40a6-ab1d-372c983df59a"
+        ]
+      },
+      "beb48f31-9f52-45dd-8886-fc7f27598f2f": {
+        "size": {
+          "width": 60,
+          "height": 60
+        },
+        "position": {
+          "x": 420,
+          "y": 90
+        },
+        "z": 1,
+        "embeds": [],
+        "isrelatedto": [
+          "fb92a172-f189-40a6-ab1d-372c983df59a"
+        ]
+      },
+      "8024a830-0736-49be-9d4e-6ab0698ff49c": {
+        "size": {
+          "width": 60,
+          "height": 60
+        },
+        "position": {
+          "x": 420,
+          "y": 210
+        },
+        "z": 1,
+        "embeds": [],
+        "isrelatedto": [
+          "fb92a172-f189-40a6-ab1d-372c983df59a"
+        ]
+      },
+      "2e481843-9b63-4f97-8e4e-d612cb61b543": {
+        "size": {
+          "width": 60,
+          "height": 60
+        },
+        "position": {
+          "x": 420,
+          "y": 330
+        },
+        "z": 1,
+        "embeds": [],
+        "isrelatedto": [
+          "fb92a172-f189-40a6-ab1d-372c983df59a"
+        ]
+      },
+      "0d44eb41-1e22-4017-b05c-66eac91886d1": {
+        "size": {
+          "width": 60,
+          "height": 60
+        },
+        "position": {
+          "x": 60,
+          "y": 450
+        },
+        "z": 1,
+        "embeds": [],
+        "isrelatedto": [
+          "fb92a172-f189-40a6-ab1d-372c983df59a"
+        ]
+      },
+      "1f9662a9-983c-49ec-8326-7c5741b03c15": {
+        "size": {
+          "width": 60,
+          "height": 60
+        },
+        "position": {
+          "x": 180,
+          "y": 450
+        },
+        "z": 1,
+        "embeds": [],
+        "isrelatedto": [
+          "fb92a172-f189-40a6-ab1d-372c983df59a"
+        ]
+      },
+      "3bfcc399-45de-417e-bef7-30fe9ae5e9d7": {
+        "size": {
+          "width": 60,
+          "height": 60
+        },
+        "position": {
+          "x": 300,
+          "y": 450
+        },
+        "z": 1,
+        "embeds": [],
+        "isrelatedto": [
+          "fb92a172-f189-40a6-ab1d-372c983df59a"
+        ]
+      },
+      "35d2218d-8248-4f6d-9d08-d37ebeefa066": {
+        "size": {
+          "width": 60,
+          "height": 60
+        },
+        "position": {
+          "x": 420,
+          "y": 450
+        },
+        "z": 1,
+        "embeds": [],
+        "isrelatedto": [
+          "fb92a172-f189-40a6-ab1d-372c983df59a"
+        ]
+      },
+      "513185f4-a400-4ec8-8e51-9fa0493e22c9": {
+        "size": {
+          "width": 60,
+          "height": 60
+        },
+        "position": {
+          "x": 540,
+          "y": 90
+        },
+        "z": 1,
+        "embeds": [],
+        "isrelatedto": [
+          "fb92a172-f189-40a6-ab1d-372c983df59a"
+        ]
+      },
+      "f56f7719-3657-4bba-b8f3-da701f43e344": {
+        "size": {
+          "width": 60,
+          "height": 60
+        },
+        "position": {
+          "x": 540,
+          "y": 210
+        },
+        "z": 1,
+        "embeds": [],
+        "isrelatedto": [
+          "fb92a172-f189-40a6-ab1d-372c983df59a"
+        ]
+      },
+      "81bf45e2-fd4b-4353-9222-024ef219aae6": {
+        "size": {
+          "width": 60,
+          "height": 60
+        },
+        "position": {
+          "x": 540,
+          "y": 330
+        },
+        "z": 1,
+        "embeds": [],
+        "isrelatedto": [
+          "fb92a172-f189-40a6-ab1d-372c983df59a"
+        ]
+      },
+      "c26161db-4264-444e-a4b8-b80a44e25081": {
+        "size": {
+          "width": 60,
+          "height": 60
+        },
+        "position": {
+          "x": 540,
+          "y": 450
+        },
+        "z": 1,
+        "embeds": [],
+        "isrelatedto": [
+          "fb92a172-f189-40a6-ab1d-372c983df59a"
+        ]
+      },
+      "5f93a5cd-7f41-4f83-8f28-1270666f6f30": {
+        "size": {
+          "width": 60,
+          "height": 60
+        },
+        "position": {
+          "x": 60,
+          "y": 570
+        },
+        "z": 1,
+        "embeds": [],
+        "isrelatedto": [
+          "fb92a172-f189-40a6-ab1d-372c983df59a"
+        ]
+      },
+      "6b7e263c-b9ec-4098-a50f-38ea24d9e9a7": {
+        "size": {
+          "width": 60,
+          "height": 60
+        },
+        "position": {
+          "x": 180,
+          "y": 570
+        },
+        "z": 1,
+        "embeds": [],
+        "isrelatedto": [
+          "fb92a172-f189-40a6-ab1d-372c983df59a"
+        ]
+      },
+      "ae3a027a-0fdd-4c2a-a3e4-b4a0e89f56cb": {
+        "size": {
+          "width": 60,
+          "height": 60
+        },
+        "position": {
+          "x": 300,
+          "y": 570
+        },
+        "z": 1,
+        "embeds": [],
+        "isrelatedto": [
+          "fb92a172-f189-40a6-ab1d-372c983df59a"
+        ]
+      }
+    }
+  }
+}

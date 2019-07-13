@@ -1,0 +1,477 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "2 Tier VPC - Public and Private Subnets",
+  "Metadata" : {
+    "AWS::CloudFormation::Interface" : {
+      "ParameterGroups" : [
+        {    
+          "Parameters" : [
+          "VPCCIDR",
+          "AvailabilityZone1",
+          "AvailabilityZone2",
+          "Public1SubnetName",
+          "Public1CIDR",
+          "Public2SubnetName",
+          "Public2CIDR",
+          "Private1SubnetName",
+          "Private1CIDR",
+          "Private2SubnetName",
+          "Private2CIDR"
+          ]    
+        }    
+      ]    
+    }    
+  },
+  "Parameters": {
+    "RegionName" : {
+	  "Description" : "All Region Name",
+	  "Type": "String",
+	  "Default" : "us-east-1",
+	  "AllowedValues" : ["us-east-1","us-east-2", "us-west-1", "us-west-2", "eu-west-1", "eu-central-1", "ap-northeast-1", "ap-northeast-2",
+						 "ap-southeast-1", "ap-southeast-2", "ap-south-1", "sa-east-1","ca-central-1","eu-west-2"]
+	},
+	"AvailabilityZone1" : {
+	  "Description" : "All Available ZoneName",
+	  "Type": "String",
+	  "Default" : "us-east-1a",
+	  "AllowedValues" : ["us-east-1a","us-east-1b","us-east-1c","us-east-1e","us-east-2a","us-east-2b","us-east-2c","us-west-1a","us-west-1c",
+						"us-west-2a","us-west-2b","us-west-2c","eu-west-1a","eu-west-1b","eu-west-1c","eu-central-1a","eu-central-1b",
+						"ap-northeast-1a","ap-northeast-1c","ap-northeast-2a","ap-northeast-2c","ap-southeast-1a","ap-southeast-1b",
+						"ap-southeast-2a","ap-southeast-2b","ap-southeast-2c","ap-south-1a","ap-south-1b","sa-east-1a","sa-east-1b","sa-east-1c","ca-central-1a","eu-west-2a",
+						"ca-central-1b","eu-west-2b"
+						]
+
+	},
+	"AvailabilityZone2" : {
+	  "Description" : "All Available ZoneName",
+	  "Type": "String",
+	  "Default" : "us-east-1b",
+	  "AllowedValues" : ["us-east-1a","us-east-1b","us-east-1c","us-east-1e","us-east-2a","us-east-2b","us-east-2c","us-west-1a","us-west-1c",
+						"us-west-2a","us-west-2b","us-west-2c","eu-west-1a","eu-west-1b","eu-west-1c","eu-central-1a","eu-central-1b",
+						"ap-northeast-1a","ap-northeast-1c","ap-northeast-2a","ap-northeast-2c","ap-southeast-1a","ap-southeast-1b",
+						"ap-southeast-2a","ap-southeast-2b","ap-southeast-2c","ap-south-1a","ap-south-1b","sa-east-1a","sa-east-1b","sa-east-1c","ca-central-1b","eu-west-2b",
+						"ca-central-1a","eu-west-2a"
+						]    
+	},     
+    "Public1SubnetName": {
+      "Type": "String",
+      "Default": "Public1"
+    },
+    "Public2SubnetName": {
+      "Type": "String",
+      "Default": "Public2"
+    },
+    "Private1SubnetName": {
+      "Type": "String",
+      "Default": "Private1"
+    },
+    "Private2SubnetName": {
+      "Type": "String",
+      "Default": "Private2"
+    },
+	"BusinessUnitTagValue": {
+      "Type": "String",
+      "Default": "CSO"
+    },
+		"ProjectTeamTagValue": {
+      "Type": "String",
+      "Default": "CSO"
+    },
+		"CostCenterTagValue": {
+      "Type": "String",
+      "Default": "10254"
+    },
+		"AccountCodeTagValue": {
+      "Type": "String",
+      "Default": "MANH"
+    },
+		"OwnerTagValue": {
+      "Type": "String",
+      "Default": "mkalava"
+    },
+		"SalesRegionTagValue": {
+      "Type": "String",
+      "Default": "US"
+    },
+		"DepartmentTagValue": {
+      "Type": "String",
+      "Default": "CSO"
+    },
+		"LocalTimezoneTagValue": {
+      "Type": "String",
+      "Default": "America/New_York"
+    },
+		"DefaultLanguageTagValue": {
+      "Type": "String",
+      "Default": "English"
+    },
+		"SDTAdministratorTagValue": {
+      "Type": "String",
+      "Default": "rrizzo"
+    }
+  },
+  "Mappings" : {
+    "RegionVPCCIDR" : {
+		"us-east-1" : {"VPCCIDR" : "192.168.20.0/25", "Public1CIDR" : "192.168.20.0/27", "Public2CIDR" : "192.168.20.32/27", "Private1CIDR" : "192.168.20.64/27", "Private2CIDR" : "192.168.20.96/27" },
+		"us-east-2" : {"VPCCIDR" : "192.168.21.0/25", "Public1CIDR" : "192.168.21.0/27", "Public2CIDR" : "192.168.21.32/27", "Private1CIDR" : "192.168.21.64/27", "Private2CIDR" : "192.168.21.96/27" },
+		"us-west-1" : {"VPCCIDR" : "192.168.22.0/25", "Public1CIDR" : "192.168.22.0/27", "Public2CIDR" : "192.168.22.32/27", "Private1CIDR" : "192.168.22.64/27", "Private2CIDR" : "192.168.22.96/27" },
+		"us-west-2" : {"VPCCIDR" : "192.168.23.0/25", "Public1CIDR" : "192.168.23.0/27", "Public2CIDR" : "192.168.23.32/27", "Private1CIDR" : "192.168.23.64/27", "Private2CIDR" : "192.168.23.96/27" },
+		"eu-west-1" : {"VPCCIDR" : "192.168.24.0/25", "Public1CIDR" : "192.168.24.0/27", "Public2CIDR" : "192.168.24.32/27", "Private1CIDR" : "192.168.24.64/27", "Private2CIDR" : "192.168.24.96/27" },
+		"eu-central-1" : {"VPCCIDR" : "192.168.25.0/25", "Public1CIDR" : "192.168.25.0/27", "Public2CIDR" : "192.168.25.32/27", "Private1CIDR" : "192.168.25.64/27", "Private2CIDR" : "192.168.25.96/27" },
+		"ap-northeast-1" : {"VPCCIDR" : "192.168.26.0/25", "Public1CIDR" : "192.168.26.0/27", "Public2CIDR" : "192.168.26.32/27", "Private1CIDR" : "192.168.26.64/27", "Private2CIDR" : "192.168.26.96/27" },
+		"ap-northeast-2" : {"VPCCIDR" : "192.168.27.0/25", "Public1CIDR" : "192.168.27.0/27", "Public2CIDR" : "192.168.27.32/27", "Private1CIDR" : "192.168.27.64/27", "Private2CIDR" : "192.168.27.96/27" },
+		"ap-southeast-1" : {"VPCCIDR" : "192.168.28.0/25", "Public1CIDR" : "192.168.28.0/27", "Public2CIDR" : "192.168.28.32/27", "Private1CIDR" : "192.168.28.64/27", "Private2CIDR" : "192.168.28.96/27" },
+		"ap-southeast-2" : {"VPCCIDR" : "192.168.29.0/25", "Public1CIDR" : "192.168.29.0/27", "Public2CIDR" : "192.168.29.32/27", "Private1CIDR" : "192.168.29.64/27", "Private2CIDR" : "192.168.29.96/27" },
+		"ap-south-1" : {"VPCCIDR" : "192.168.30.0/25", "Public1CIDR" : "192.168.30.0/27", "Public2CIDR" : "192.168.30.32/27", "Private1CIDR" : "192.168.30.64/27", "Private2CIDR" : "192.168.30.96/27" },
+		"sa-east-1" : {"VPCCIDR" : "192.168.31.0/25", "Public1CIDR" : "192.168.31.0/27", "Public2CIDR" : "192.168.31.32/27", "Private1CIDR" : "192.168.31.64/27", "Private2CIDR" : "192.168.31.96/27" },
+		"ca-central-1" : {"VPCCIDR" : "192.168.32.0/25", "Public1CIDR" : "192.168.32.0/27", "Public2CIDR" : "192.168.32.32/27", "Private1CIDR" : "192.168.32.64/27", "Private2CIDR" : "192.168.32.96/27" },
+		"eu-west-2" : {"VPCCIDR" : "192.168.33.0/25", "Public1CIDR" : "192.168.33.0/27", "Public2CIDR" : "192.168.33.32/27", "Private1CIDR" : "192.168.33.64/27", "Private2CIDR" : "192.168.33.96/27" }
+		}
+    },		
+	
+  "Resources": {
+    "VPC": {
+      "Type": "AWS::EC2::VPC",
+      "Properties": {
+        "CidrBlock": { "Fn::FindInMap" : [ "RegionVPCCIDR", { "Ref" : "RegionName" }, "VPCCIDR" ] },
+        "EnableDnsSupport": "true",
+        "EnableDnsHostnames": "true",
+        "Tags": [
+          { "Key": "Name", "Value": { "Ref": "AWS::StackName" } },
+          { "Key": "Business Unit", "Value": { "Ref": "BusinessUnitTagValue" } },
+          { "Key": "Project Team", "Value": { "Ref": "ProjectTeamTagValue" } },
+          { "Key": "Cost Center", "Value": { "Ref": "CostCenterTagValue" } },
+          { "Key": "Account Code", "Value": { "Ref": "AccountCodeTagValue" } },
+          { "Key": "Owner", "Value": { "Ref": "OwnerTagValue" } },
+          { "Key": "Sales Region", "Value": { "Ref": "SalesRegionTagValue" } },
+          { "Key": "Department", "Value": { "Ref": "DepartmentTagValue" } },
+          { "Key": "Local Timezone", "Value": { "Ref": "LocalTimezoneTagValue" } },
+          { "Key": "Default Language", "Value": { "Ref": "DefaultLanguageTagValue" } },
+          { "Key": "SDT Administator", "Value": { "Ref": "SDTAdministratorTagValue" } }
+        ]
+      }
+    },
+    "PublicSubnet1": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "AvailabilityZone": { "Ref": "AvailabilityZone1"},
+        "VpcId": {"Ref": "VPC"},
+        "CidrBlock": { "Fn::FindInMap" : [ "RegionVPCCIDR", { "Ref" : "RegionName" }, "Public1CIDR" ] },
+        "Tags": [{"Key": "VPC","Value": { "Ref": "AWS::StackName"}},{"Key": "Network","Value": "Public"},
+                {"Key": "Name","Value": {"Fn::Join": [ " ",[{"Ref": "Public1SubnetName"},{"Ref": "AvailabilityZone1"}]]}}
+               ]
+        }
+    },
+    "PublicSubnet2": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "AvailabilityZone": { "Ref": "AvailabilityZone2" },
+          "VpcId": {"Ref": "VPC"},
+          "CidrBlock": { "Fn::FindInMap" : [ "RegionVPCCIDR", { "Ref" : "RegionName" }, "Public2CIDR" ] },
+          "Tags": [{"Key": "VPC","Value": {"Ref": "AWS::StackName"}},
+					{"Key": "Network","Value": "Public"},
+					{"Key": "Name","Value": {"Fn::Join": [ " ",[{"Ref": "Public2SubnetName"},{"Ref": "AvailabilityZone2"}]]}}
+				  ]
+      }
+    },
+    "PrivateSubnet1": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "AvailabilityZone": {"Ref": "AvailabilityZone1"},
+        "VpcId": {"Ref": "VPC"},
+        "CidrBlock": { "Fn::FindInMap" : [ "RegionVPCCIDR", { "Ref" : "RegionName" }, "Private1CIDR" ] },
+        "Tags": [{"Key": "Application","Value": {"Ref": "AWS::StackName"}},
+                 {"Key": "Network","Value": "Private"},
+				 {"Key": "Name","Value": {"Fn::Join": [ " ",[{"Ref": "Private1SubnetName"},{"Ref": "AvailabilityZone1"}]]}}
+				]
+        }
+    },
+    "PrivateSubnet2": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "AvailabilityZone": {"Ref": "AvailabilityZone2"},
+        "VpcId": {"Ref": "VPC"},
+        "CidrBlock": { "Fn::FindInMap" : [ "RegionVPCCIDR", { "Ref" : "RegionName" }, "Private2CIDR" ] },
+        "Tags": [{"Key": "Application","Value": {"Ref": "AWS::StackName"}},
+                 {"Key": "Network","Value": "Private"},
+				 {"Key": "Name","Value": {"Fn::Join": [ " ",[{"Ref": "Private2SubnetName"},{"Ref": "AvailabilityZone2"}]]}}
+				]
+        }
+    },
+    "InternetGateway": {
+     "Type": "AWS::EC2::InternetGateway",
+      "Properties": {
+        "Tags": [{"Key": "Application","Value": {"Ref": "AWS::StackName"}},
+                 {"Key": "Network","Value": "Public"}]
+        }
+    },
+    "AttachGateway": {
+      "Type": "AWS::EC2::VPCGatewayAttachment",
+      "Properties": {
+        "VpcId": {"Ref": "VPC"},
+        "InternetGatewayId": {"Ref": "InternetGateway"}
+      }
+    },
+    "NATGateway": {
+      "DependsOn": "AttachGateway",
+      "Type": "AWS::EC2::NatGateway",
+      "Properties": {
+        "AllocationId": {"Fn::GetAtt": [ "NATGatewayEIP","AllocationId"]},
+        "SubnetId": {"Ref": "PublicSubnet1"}
+      }
+    },
+    "NATGatewayEIP": {
+      "Type": "AWS::EC2::EIP",
+      "Properties": {
+        "Domain": "vpc"
+      }
+    },
+    "NATGateway2": {
+      "DependsOn": "AttachGateway",
+      "Type": "AWS::EC2::NatGateway",
+      "Properties": {
+        "AllocationId": {"Fn::GetAtt": ["NATGatewayEIP2","AllocationId"]},
+        "SubnetId": {"Ref": "PublicSubnet2"}
+      }
+    },
+    "NATGatewayEIP2": {
+      "Type": "AWS::EC2::EIP",
+      "Properties": {
+        "Domain": "vpc"
+      }
+    },
+    "S3Endpoint": {
+      "Type": "AWS::EC2::VPCEndpoint",
+      "Properties": {
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": "*",
+              "Action": [
+                "s3:*"
+              ],
+              "Resource": [
+                "arn:aws:s3:::*"
+              ]
+            }
+          ]
+        },
+        "RouteTableIds": [{"Ref": "PrivateRouteTable"},{"Ref": "PrivateRouteTable2" } ],
+        "ServiceName": {"Fn::Join": ["",[ "com.amazonaws.",{"Ref": "AWS::Region"},".s3"]]},
+        "VpcId": {"Ref": "VPC"}
+      }
+    },
+    "VPNGateway": {
+      "Type": "AWS::EC2::VPNGateway",
+      "Properties": {
+        "Type": "ipsec.1",
+        "Tags": [{"Key": "Name","Value": "PrivateGateway"}]
+      }
+    },
+    "AttachVpnGateway": {
+       "Type": "AWS::EC2::VPCGatewayAttachment",
+      "Properties": {
+        "VpcId": {"Ref": "VPC"},
+        "VpnGatewayId": {"Ref": "VPNGateway"}
+      }
+    },
+    "VPNGatewayRoutePropPrivate": {
+      "DependsOn": "AttachVpnGateway",
+      "Type": "AWS::EC2::VPNGatewayRoutePropagation",
+      "Properties": {
+        "RouteTableIds": [{"Ref": "PrivateRouteTable"},{"Ref": "PrivateRouteTable2"}],
+        "VpnGatewayId": {"Ref": "VPNGateway"}
+      }
+    },
+    "VPNGatewayRoutePropPublic": {
+      "DependsOn": "AttachVpnGateway",
+      "Type": "AWS::EC2::VPNGatewayRoutePropagation",
+      "Properties": {
+        "RouteTableIds": [{"Ref": "PublicRouteTable"}],
+        "VpnGatewayId": {"Ref": "VPNGateway"}
+      }
+    },
+    "PublicRouteTable": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": {"Ref": "VPC"},
+        "Tags": [{"Key": "Name","Value": "PublicRouteTable"}]
+      }
+    },
+    "PublicRoute": {
+      "Type": "AWS::EC2::Route",
+      "DependsOn": "AttachGateway",
+      "Properties": {
+        "RouteTableId": {"Ref": "PublicRouteTable"},
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "GatewayId": {"Ref": "InternetGateway"}
+      }
+    },
+    "PublicSubnet1RouteTableAssociation": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "SubnetId": {"Ref": "PublicSubnet1"},
+        "RouteTableId": {"Ref": "PublicRouteTable"}
+      }
+    },
+    "PublicSubnet2RouteTableAssociation": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "SubnetId": {"Ref": "PublicSubnet2"},
+        "RouteTableId": {"Ref": "PublicRouteTable"}
+      }
+    },
+    "PrivateRouteTable": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {"VpcId": {"Ref": "VPC"},
+        "Tags": [{"Key": "Name","Value": "PrivateRouteTable"}]
+      }
+    },
+    "PrivateRoute1": {
+      "Type": "AWS::EC2::Route",
+      "Properties": {
+        "RouteTableId": {"Ref": "PrivateRouteTable"},
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "NatGatewayId": {"Ref": "NATGateway"}
+      }
+    },
+    "PrivateRouteTable2": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": {"Ref": "VPC"},
+        "Tags": [{"Key": "Name","Value": "PrivateRouteTable2"}]
+      }
+    },
+    "PrivateRoute2": {
+      "Type": "AWS::EC2::Route",
+      "Properties": {
+        "RouteTableId": {"Ref": "PrivateRouteTable2"},
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "NatGatewayId": {"Ref": "NATGateway2"}
+      }
+    },
+    "PrivateSubnet1RouteTableAssociation": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "SubnetId": {"Ref": "PrivateSubnet1"},
+        "RouteTableId": {"Ref": "PrivateRouteTable"}
+      }
+    },
+    "PrivateSubnet2RouteTableAssociation": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "SubnetId": {"Ref": "PrivateSubnet2"},
+        "RouteTableId": {"Ref": "PrivateRouteTable2"}
+      }
+    },
+	"AdminSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "Access control from on-premise networks",
+        "VpcId": {"Ref": "VPC"},
+        "SecurityGroupIngress": [
+          {
+            "IpProtocol": "tcp","FromPort": "80","ToPort": "80","CidrIp": "199.47.37.3/32"
+          },
+          {
+            "IpProtocol": "tcp","FromPort": "1521","ToPort": "1521","CidrIp": "199.47.37.3/32"
+          },
+          {
+            "IpProtocol": "tcp","FromPort": "22","ToPort": "22","CidrIp": "199.47.37.3/32"
+          },
+          {
+            "IpProtocol": "tcp","FromPort": "20000","ToPort": "25000","CidrIp": "199.47.37.3/32"
+          },
+          {
+            "IpProtocol": "tcp","FromPort": "443","ToPort": "443","CidrIp": "199.47.37.3/32"
+          },
+          {
+            "IpProtocol": "tcp","FromPort": "80","ToPort": "80","CidrIp": "193.195.90.20/32"
+          },
+          {
+            "IpProtocol": "tcp","FromPort": "1521","ToPort": "1521","CidrIp": "193.195.90.20/32"
+          },
+          {
+            "IpProtocol": "tcp","FromPort": "22","ToPort": "22","CidrIp": "193.195.90.20/32"
+          },
+          {
+            "IpProtocol": "tcp","FromPort": "20000","ToPort": "25000","CidrIp": "193.195.90.20/32"
+          },
+          {
+            "IpProtocol": "tcp","FromPort": "443","ToPort": "443","CidrIp": "193.195.90.20/32"
+          },
+          {
+            "IpProtocol": "tcp","FromPort": "80","ToPort": "80","CidrIp": "103.63.148.5/32"
+          },
+          {
+            "IpProtocol": "tcp","FromPort": "1521","ToPort": "1521","CidrIp": "103.63.148.5/32"
+          },
+          {
+            "IpProtocol": "tcp","FromPort": "22","ToPort": "22","CidrIp": "103.63.148.5/32"
+          },
+          {
+            "IpProtocol": "tcp","FromPort": "20000","ToPort": "25000","CidrIp": "103.63.148.5/32"
+          },
+          {
+            "IpProtocol": "tcp","FromPort": "443","ToPort": "443","CidrIp": "103.63.148.5/32"
+          }
+        ]
+      }
+	}
+  },
+  "Outputs": {
+    "Vpc": {"Value": {"Ref": "VPC"},
+      "Export" : { "Name" : {"Fn::Sub": "${AWS::StackName}-VPC" }}
+    },
+    "VpcCidr": {
+      "Value": { "Fn::FindInMap" : [ "RegionVPCCIDR", { "Ref" : "RegionName" }, "VPCCIDR" ] },
+      "Export" : { "Name" : {"Fn::Sub": "${AWS::StackName}-VPCCIDR" }}
+    },
+    "PublicSubnet1": {
+      "Value": { "Ref": "PublicSubnet1"},
+      "Export" : { "Name" : {"Fn::Sub": "${AWS::StackName}-PublicSubnet1" }}
+    },
+    "PublicCidr1": {
+      "Value": { "Fn::FindInMap" : [ "RegionVPCCIDR", { "Ref" : "RegionName" }, "Public1CIDR" ] },	  
+      "Export" : { "Name" : {"Fn::Sub": "${AWS::StackName}-Public1CIDR" }}
+    },
+    "PublicSubnet2": {
+      "Value": {"Ref": "PublicSubnet2"},
+      "Export" : { "Name" : {"Fn::Sub": "${AWS::StackName}-PublicSubnet2" }}
+    },
+    "PublicCidr2": {
+      "Value": { "Fn::FindInMap" : [ "RegionVPCCIDR", { "Ref" : "RegionName" }, "Public2CIDR" ] },
+      "Export" : { "Name" : {"Fn::Sub": "${AWS::StackName}-Public2CIDR" }}
+    },
+    "PrivateSubnet1": {
+      "Value": {"Ref": "PrivateSubnet1"},
+      "Export" : { "Name" : {"Fn::Sub": "${AWS::StackName}-PrivateSubnet1" }}
+    },
+    "PrivateCidr1": {
+      "Value": { "Fn::FindInMap" : [ "RegionVPCCIDR", { "Ref" : "RegionName" }, "Private1CIDR" ] },
+      "Export" : { "Name" : {"Fn::Sub": "${AWS::StackName}-Private1CIDR" }}
+    },
+    "PrivateSubnet2": {
+      "Value": {"Ref": "PrivateSubnet2"},
+      "Export" : { "Name" : {"Fn::Sub": "${AWS::StackName}-PrivateSubnet2" }}
+    },
+    "PrivateCidr2": {
+      "Value": { "Fn::FindInMap" : [ "RegionVPCCIDR", { "Ref" : "RegionName" }, "Private2CIDR" ] },
+      "Export" : { "Name" : {"Fn::Sub": "${AWS::StackName}-Private2CIDR" }}
+    },
+    "AvailabilityZone1": {
+      "Value": {"Ref": "AvailabilityZone1"},
+      "Export" : { "Name" : {"Fn::Sub": "${AWS::StackName}-AvailabilityZone1" }}
+    },
+    "AvailabilityZone2": {
+      "Value": {"Ref": "AvailabilityZone2"},
+      "Export" : { "Name" : {"Fn::Sub": "${AWS::StackName}-AvailabilityZone2" }}
+    },
+	"AdminSecurityGroup": {
+      "Value": {"Ref": "AdminSecurityGroup"},
+      "Export": {"Name": {"Fn::Sub": "${AWS::StackName}-AdminSecurityGroup"}}
+    }
+  }
+ }
